@@ -1,37 +1,68 @@
-# This playbook can be used to create a VM on libvirt with Ansible.
+# 🖥️ Ansible Libvirt VM Provisioning
 
-## Steps
+This playbook automates the creation of virtual machines on a **local libvirt/KVM host** using Ansible. It is configured to run **locally** on the same system where libvirt is installed and running.
 
+---
 
-1. Create xml file to create the VM.
-2. Create Ansible playbook with following tasks
-- Create the qcow2 VM disk
-- Craete the VM xml file. This xml file will have info about the qcow2 that your 1st task is going to create.
-- In the XML task you also have to specify the path of your Storage Pool for VMs.
-- Also specify the path of your ISO of RHCOS/RHEL image.
-3. Clone this repository.
+## 📂 Overview
+
+* Creates VMs in `/home/user/vms`
+* Uses a bootable ISO (e.g. RHCOS or RHEL) to initialize the VMs
+* Generates a `libvirt` XML domain definition
+* Defines and starts the VMs using `virsh`
+
+---
+
+## 💪 Steps to Use
+
+### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/kaybee-singh/ansible-playbook-libvirt-vm
+cd ansible-playbook-libvirt-vm
 ```
-4. Edit the testvm.xml file and change the main values, following are main values which you can change. Feel free to tweak the file as per your requirement.
-```bash
+
+### 2. Customize the Variables
+
+Ensure the following are in place:
+
+* Your VM disk and ISO files are located in `/home/user/vms`
+* You have a valid RHCOS or RHEL ISO, e.g. `rhcos-live.x86_64.iso`
+* Edit the XML template (`testvm.xml` or similar) to set:
+
+  * VM name
+  * Memory and vCPU
+  * Disk and ISO paths
+
+#### Sample Snippet to Modify:
+
+```xml
 <domain type='kvm'>
   <name>testvm</name>
-  <memory unit='MiB'>4096</memory>            >>>> Memory
-  <vcpu>2</vcpu>                              >>> vcpu
-  <os>
+  <memory unit='MiB'>4096</memory>         <!-- Set VM Memory -->
+  <vcpu>2</vcpu>                           <!-- Set vCPUs -->
+
+  <devices>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='qcow2'/>
-      <source file='/home/user/vms/testvm.qcow2'/>          >>> Where your VM disk is created.
+      <source file='/home/user/vms/testvm.qcow2'/>        <!-- VM Disk Path -->
       <target dev='vda' bus='virtio'/>
     </disk>
     <disk type='file' device='cdrom'>
-      <driver name='qemu' type='raw'/>
-      <source file='/home/user/vms/rhcos-live-iso.x86_64.iso'/>                      >>> Where your RHCOS ISO is situated
+      <source file='/home/user/vms/rhcos-live.x86_64.iso'/>  <!-- ISO Path -->
       <target dev='hdb' bus='ide'/>
       <readonly/>
     </disk>
+  </devices>
+</domain>
 ```
-5. Now run the playbook with your user if you have permissions to create the VMs, else use the root user.
-```bash
-sudo ansible-playbook create-vm-playbook.yaml
+
+---
+
+### 3. Review Playbook Tasks
+
+This playbook does the following:
+
+* ✅ Creates a `qcow2` disk using `qemu-img`
+* ✅ Generates a domain XML from xml file.
+* ✅ Defines the VM with `virsh define`
+* ✅ Starts the VM
