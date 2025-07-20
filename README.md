@@ -66,3 +66,13 @@ This playbook does the following:
 * ✅ Generates a domain XML from xml file.
 * ✅ Defines the VM with `virsh define`
 * ✅ Starts the VM
+### 3. Make sure your user has rights to create the libvirt VMs.
+```bash
+sudo usermod -aG libvirt $(whoami)
+newgrp libvirt
+```
+### 4. Run the Playbook
+```bash
+
+ansible-playbook create-vm-playbook.yaml
+```
