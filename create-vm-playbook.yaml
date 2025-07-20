@@ -1,0 +1,18 @@
+---
+- name: Create test VM without variables
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create disk in custom storage pool using qemu-img
+      command: >
+        qemu-img create -f qcow2 /home/karan/vms/testvm.qcow2 20G
+      args:
+        creates: /home/karan/vms/testvm.qcow2
+    - name: Define the VM from XML using virsh
+      command: >
+        virsh define testvm.xml
+      args:
+        chdir: "{{ playbook_dir }}"
+    - name: Start the VM
+      command: >
+        virsh start testvm
