@@ -73,6 +73,6 @@ newgrp libvirt
 ```
 ### 4. Run the Playbook
 ```bash
-
+sudo fdisk -l
 ansible-playbook create-vm-playbook.yaml
 ```
