@@ -16,12 +16,12 @@
   <devices>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/home/user/vms/testvm.qcow2'/>
+      <source file='/home/karan/vms/testvm.qcow2'/>
       <target dev='vda' bus='virtio'/>
     </disk>
     <disk type='file' device='cdrom'>
       <driver name='qemu' type='raw'/>
-      <source file='/home/user/vms/rhcos-live-iso.x86_64.iso'/>
+      <source file='/home/karan/vms/rhcos-live-iso.x86_64.iso'/>
       <target dev='hdb' bus='ide'/>
       <readonly/>
     </disk>
